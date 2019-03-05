@@ -1,6 +1,8 @@
-<div class="notification">
+{{showNotification$ | async}}
+
+<div class="notification" [class.visible]="showNotification$ | async">
   <span>There's new data available. Click to reload the data.</span>
-  <button mat-raised-button color="accent">
+  <button mat-raised-button color="accent" (click)="update$.next()">
     <div class="flex-row">
       <mat-icon>cached</mat-icon>
       UPDATE

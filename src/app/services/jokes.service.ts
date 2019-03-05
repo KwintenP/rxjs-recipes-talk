@@ -27,12 +27,12 @@ export class JokesService {
     if (this.jokes$) {
       return this.jokes$;
     }
-    this.jokes$ = timer(0, 5000).pipe(
+    this.jokes$ = timer(0, 10000).pipe(
       switchMap(_ => this.http.get<JokesResponse>(this.API_ENDPOINT)),
       map(res => res.value),
       shareReplay(1),
     );
-    
+
     return this.jokes$;
   }
 }
