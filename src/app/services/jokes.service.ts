@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 export interface JokesResponse {
   type: 'sucess',
@@ -18,12 +19,19 @@ export interface Joke {
 })
 export class JokesService {
   API_ENDPOINT = 'https://api.icndb.com/jokes/random/5?limitTo=[nerdy]';
+  jokes$: Observable<Array<Joke>>;
 
   constructor(private http: HttpClient) { }
 
   getJokes() {
-    return this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(
-      map(res => res.value)
+    if (this.jokes$) {
+      return this.jokes$;
+    }
+    this.jokes$ = this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(
+      map(res => res.value),
+      shareReplay(1)
     );
+
+    return this.jokes$;
   }
 }
