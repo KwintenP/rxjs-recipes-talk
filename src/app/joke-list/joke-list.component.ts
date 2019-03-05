@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JokesService, Joke } from '../services/jokes.service';
 import { Observable, Subject, merge } from 'rxjs';
-import { skip, mapTo, distinctUntilChanged, startWith, withLatestFrom, map, first } from 'rxjs/operators';
+import { skip, mapTo, distinctUntilChanged, startWith, withLatestFrom, map, first, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-joke-list',
@@ -13,14 +13,28 @@ export class JokeListComponent implements OnInit {
   jokes$: Observable<Array<Joke>>;
   update$ = new Subject();
   showNotification$: Observable<boolean>;
+  reload$ = new Subject<void>();
 
   constructor(private jokesService: JokesService) { }
 
   ngOnInit() {
     this.sourceJokes$ = this.jokesService.getJokes();
 
-    const show$ = this.sourceJokes$.pipe(
-      skip(1),
+
+    const initialNotification$ = this.getNotifications();
+
+    const forceReload$ = this.reload$.pipe(
+      switchMap(() => this.getNotifications())
+    );
+
+    // reload$               -------------------x----
+    // getNotifcations       -a-----b------c---------
+    // initialNotifications$ -------x-----------|----
+    // forceReload$          -------------------------b-----------------
+    //                                          --a---b----c------------
+    // show$                 -------t-----------------t-----------------
+
+    const show$ = merge(initialNotification$, forceReload$).pipe(
       mapTo(true)
     );
 
@@ -30,6 +44,8 @@ export class JokeListComponent implements OnInit {
       startWith(false),
       distinctUntilChanged()
     );
+
+    // ----f----------t-------f------t
 
     const initialJokes$ = this.sourceJokes$.pipe(
       first(),
@@ -41,5 +57,14 @@ export class JokeListComponent implements OnInit {
     );
 
     this.jokes$ = merge(initialJokes$, mostRecentJokes$);
+  }
+
+  getNotifications() {
+    return this.jokesService.getJokes().pipe(skip(1));
+  }
+
+  forceReload() {
+    console.log('force reloading');
+    this.reload$.next();
   }
 }
