@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { Observable, timer } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 export interface JokesResponse {
   type: 'sucess',
@@ -27,13 +27,10 @@ export class JokesService {
     if (this.jokes$) {
       return this.jokes$;
     }
-
-    this.jokes$ = timer(0, 5000).pipe(
-      switchMap(_ => this.http.get<JokesResponse>(this.API_ENDPOINT)),
+    this.jokes$ = this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(
       map(res => res.value),
-      shareReplay(1)
     );
-
+    
     return this.jokes$;
   }
 }
