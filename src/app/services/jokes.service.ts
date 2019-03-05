@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 export interface JokesResponse {
@@ -29,6 +29,7 @@ export class JokesService {
     }
     this.jokes$ = this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(
       map(res => res.value),
+      shareReplay(1),
     );
     
     return this.jokes$;
