@@ -1,0 +1,17 @@
+.container {
+  margin-top: 30px;
+}
+
+mat-card {
+  margin: auto;
+  max-width: 250px;
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+}
+
+mat-card + mat-card {
+  margin-top: 30px;
+}

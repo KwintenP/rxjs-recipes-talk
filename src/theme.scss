@@ -1,0 +1,36 @@
+@import '~@angular/material/theming';
+@import 'app/app.component.scss';
+
+@include mat-core();
+
+$candy-app-primary: mat-palette($mat-indigo);
+$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
+$candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
+
+@include angular-material-theme($candy-app-theme);
+
+$dark-primary: mat-palette($mat-indigo);
+$dark-accent: mat-palette($mat-amber, A200, A100, A400);
+$grey: mat-palette($mat-grey, A400, A100, A400);
+$dark-warn: mat-palette($mat-deep-orange);
+$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+
+.dark-theme {
+  @include angular-material-theme($dark-theme);
+}
+
+@mixin content-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  body {
+    background: mat-color($background, background) !important;
+    color: mat-color($foreground, text);
+  }
+
+  .cta-row {
+    background: mat-color($grey, 300) !important;
+  }
+}
+
+@include content-theme($dark-theme);

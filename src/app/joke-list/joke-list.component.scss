@@ -1,0 +1,79 @@
+:host {
+  display: block;
+  padding-top: 66px;
+  position: absolute;
+  width: 100%;
+  z-index: -1;
+}
+
+.notification {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+  padding: 10px 15px;
+  font-size: 0.8em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-family: 'Roboto';
+  opacity: 0;
+  transform: translateY(-110%);
+  z-index: -1;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+  &.visible {
+    transform: translateY(10px);
+    opacity: 1;
+  }
+
+  span {
+    flex: 1;
+  }
+
+  button {
+    margin-left: 10px;
+  }
+}
+
+main {
+  padding: 10px;
+
+  [mat-icon-button] {
+    margin-left: 5px;
+  }
+}
+
+.reload-button {
+  position: absolute;
+  top: 11px;
+  z-index: -2;
+  margin-bottom: 10px;
+}
+
+.joke-content {
+  align-items: center;
+}
+
+button .flex-row mat-icon {
+  margin-right: 5px;
+}
+
+.vote {
+  background: gainsboro;
+  border-radius: 50%;
+  padding: 5px;
+  color: #424242;
+  margin-right: 15px;
+}
+
+.heart {
+  color: #f44336;
+}
+
+mat-card + mat-card {
+  margin-top: 10px;
+}

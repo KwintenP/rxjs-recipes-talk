@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+@import './theme';
+
+.flex,
+%flex {
+  display: flex;
+}
+
+.flex-row {
+  @extend %flex;
+  align-items: center;
+}
+
+.stretch {
+  flex: 1 1 auto;
+}

@@ -1,0 +1,26 @@
+<div class="notification">
+  <span>There's new data available. Click to reload the data.</span>
+  <button mat-raised-button color="accent">
+    <div class="flex-row">
+      <mat-icon>cached</mat-icon>
+      UPDATE
+    </div>
+  </button>
+</div>
+<main>
+  <button class="reload-button" mat-raised-button color="accent">
+    <div class="flex-row">
+      <mat-icon>cached</mat-icon>
+      FETCH NEW JOKES
+    </div>
+  </button>
+  <mat-card *ngFor="let joke of (jokes$ | async)">
+    <div class="joke-content flex">
+      <span class="vote">{{ getVotes(joke.id) }}</span>
+      <span class="stretch" [innerHTML]="joke.joke"></span>
+      <button mat-icon-button>
+        <mat-icon class="heart" aria-label="Like">favorite</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+</main>
