@@ -20,7 +20,6 @@ export class JokeListComponent implements OnInit {
   ngOnInit() {
     this.sourceJokes$ = this.jokesService.getJokes();
 
-
     const initialNotification$ = this.getNotifications();
 
     const forceReload$ = this.reload$.pipe(
