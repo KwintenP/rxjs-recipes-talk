@@ -8,12 +8,6 @@
   </button>
 </div>
 <main>
-  <button class="reload-button" (click)="forceReload()" mat-raised-button color="accent" >
-    <div class="flex-row">
-      <mat-icon>cached</mat-icon>
-      FETCH NEW JOKES
-    </div>
-  </button>
   <mat-card *ngFor="let joke of (jokes$ | async)">
     <div class="joke-content flex">
       <span class="vote">1</span>

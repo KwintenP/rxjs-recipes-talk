@@ -1,8 +1,8 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row class="flex">
     <span class="stretch">World of Jokes</span>
-    <button mat-icon-button>
-      <mat-icon aria-label="Login">menu</mat-icon>
+    <button mat-icon-button (click)="openSettings()">
+      <mat-icon aria-label="Login">settings</mat-icon>
     </button>
   </mat-toolbar-row>
   <mat-toolbar-row class="cta-row" *ngIf="(isRoot | async)">
