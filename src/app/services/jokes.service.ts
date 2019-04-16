@@ -7,7 +7,7 @@ import {
   catchError,
   distinctUntilChanged
 } from "rxjs/operators";
-import { Observable, timer, NEVER, of } from "rxjs";
+import { Observable, timer, NEVER, EMPTY } from "rxjs";
 import { SettingsService, select } from "./settings.service";
 
 export interface JokesResponse {
@@ -25,7 +25,7 @@ export interface Joke {
   providedIn: "root"
 })
 export class JokesService {
-  API_ENDPOINT = "https://api.icndb.com/jokes/random/5?limitTo=[nerdy]";
+  API_ENDPOINT = "https://api.icndb.com/jokes/random/10?limitTo=[nerdy]";
   jokes$: Observable<Array<Joke>>;
 
   constructor(
@@ -50,7 +50,7 @@ export class JokesService {
             switchMap(_ =>
               this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(
                 map(res => res.value),
-                catchError(_ => of([]))
+                catchError(_ => EMPTY)
               )
             )
           );
