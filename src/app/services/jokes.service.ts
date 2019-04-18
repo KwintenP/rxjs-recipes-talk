@@ -1,14 +1,16 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import {
+  distinctUntilChanged,
   map,
+  mapTo,
+  retryWhen,
   shareReplay,
   switchMap,
-  catchError,
-  distinctUntilChanged
+  take
 } from "rxjs/operators";
-import { Observable, timer, NEVER, EMPTY } from "rxjs";
-import { SettingsService, select } from "./settings.service";
+import { fromEvent, NEVER, Observable, of, timer } from "rxjs";
+import { SettingsService } from "./settings.service";
 
 export interface JokesResponse {
   type: "sucess";
@@ -48,9 +50,18 @@ export class JokesService {
         if (pollingEnabled) {
           return timer(0, interval).pipe(
             switchMap(_ =>
-              this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(
-                map(res => res.value),
-                catchError(_ => EMPTY)
+              this.http
+                .get<JokesResponse>(this.API_ENDPOINT)
+                .pipe(map(res => res.value))
+            ),
+            retryWhen(errors =>
+              errors.pipe(
+                switchMap<any, any>(_ => {
+                  if (navigator.onLine) {
+                    return timer(1000).pipe(take(5));
+                  }
+                  return fromEvent(window, `online`);
+                })
               )
             )
           );
@@ -62,6 +73,4 @@ export class JokesService {
 
     return this.jokes$;
   }
-
-  stopPolling() {}
 }
