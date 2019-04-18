@@ -1,0 +1,28 @@
+.field {
+  position: relative;
+  overflow: hidden;
+}
+
+.update-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #8bc34a;
+  position: absolute;
+  right: 0;
+  transform: translateX(100%);
+  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  &.visible {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  mat-icon {
+    margin-right: 6px;
+  }
+}
+
+.mat-dialog-content {
+  overflow: hidden;
+}

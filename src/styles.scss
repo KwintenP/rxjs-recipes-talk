@@ -1,5 +1,9 @@
 @import './theme';
 
+html {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
 .flex,
 %flex {
   display: flex;

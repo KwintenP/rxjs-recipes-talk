@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SettingsService, Settings } from '../services/settings.service';
 import { Observable, of, concat, pipe } from 'rxjs';
-import { tap, take, switchMap, map, distinctUntilChanged, delay, startWith } from 'rxjs/operators';
+import { tap, take, switchMap, map, distinctUntilChanged, delay, startWith, skip } from 'rxjs/operators';
 
 const propertyUpdated = (property: string) =>
   pipe(
     map(form => form[property]),
     distinctUntilChanged(),
+    skip(1),
     switchMap(_ => {
       return concat(of(true), of(false).pipe(delay(1000)));
     }),
-    startWith(false),
   );
 
 @Component({
@@ -21,7 +21,6 @@ const propertyUpdated = (property: string) =>
 })
 export class SettingsDialogComponent implements OnInit {
   form: FormGroup;
-  showSettingsUpdated$: Observable<boolean>;
   intervalUpdated$: Observable<boolean>;
   pollingEnabledUpdated$: Observable<boolean>;
   showNotificationsUpdated$: Observable<boolean>;
@@ -37,12 +36,11 @@ export class SettingsDialogComponent implements OnInit {
 
     this.settingsService.settings$.pipe(take(1)).subscribe(settings => this.form.patchValue(settings));
 
-    this.showSettingsUpdated$ = this.form.valueChanges.pipe();
-
     this.form.valueChanges.subscribe((form: Settings) => this.settingsService.updateSettings(form));
 
-    this.intervalUpdated$ = this.form.valueChanges.pipe(propertyUpdated('interval'));
-    this.showNotificationsUpdated$ = this.form.valueChanges.pipe(propertyUpdated('showNotifications'));
-    this.pollingEnabledUpdated$ = this.form.valueChanges.pipe(propertyUpdated('pollingEnabled'));
+    const formChanged$ = this.form.valueChanges.pipe(startWith(this.form.value));
+    this.intervalUpdated$ = formChanged$.pipe(propertyUpdated('interval'));
+    this.showNotificationsUpdated$ = formChanged$.pipe(propertyUpdated('showNotifications'));
+    this.pollingEnabledUpdated$ = formChanged$.pipe(propertyUpdated('pollingEnabled'));
   }
 }
