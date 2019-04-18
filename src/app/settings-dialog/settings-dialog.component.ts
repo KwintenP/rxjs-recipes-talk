@@ -1,8 +1,26 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { SettingsService, Settings } from "../services/settings.service";
-import { Observable } from "rxjs";
-import { tap, take } from "rxjs/operators";
+import { Observable, of, concat, pipe } from "rxjs";
+import {
+  tap,
+  take,
+  switchMap,
+  map,
+  distinctUntilChanged,
+  delay,
+  startWith
+} from "rxjs/operators";
+
+const propertyUpdated = (property: string) =>
+  pipe(
+    map(form => form[property]),
+    distinctUntilChanged(),
+    switchMap(_ => {
+      return concat(of(true), of(false).pipe(delay(1000)));
+    }),
+    startWith(false)
+  );
 
 @Component({
   selector: "app-settings-dialog",
@@ -12,6 +30,9 @@ import { tap, take } from "rxjs/operators";
 export class SettingsDialogComponent implements OnInit {
   form: FormGroup;
   showSettingsUpdated$: Observable<boolean>;
+  intervalUpdated$: Observable<boolean>;
+  pollingEnabledUpdated$: Observable<boolean>;
+  showNotificationsUpdated$: Observable<boolean>;
 
   constructor(
     private fb: FormBuilder,
@@ -33,6 +54,16 @@ export class SettingsDialogComponent implements OnInit {
 
     this.form.valueChanges.subscribe((form: Settings) =>
       this.settingsService.updateSettings(form)
+    );
+
+    this.intervalUpdated$ = this.form.valueChanges.pipe(
+      propertyUpdated("interval")
+    );
+    this.showNotificationsUpdated$ = this.form.valueChanges.pipe(
+      propertyUpdated("showNotifications")
+    );
+    this.pollingEnabledUpdated$ = this.form.valueChanges.pipe(
+      propertyUpdated("pollingEnabled")
     );
   }
 }
