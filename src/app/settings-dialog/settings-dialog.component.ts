@@ -1,16 +1,8 @@
-import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { SettingsService, Settings } from "../services/settings.service";
-import { Observable, of, concat, pipe } from "rxjs";
-import {
-  tap,
-  take,
-  switchMap,
-  map,
-  distinctUntilChanged,
-  delay,
-  startWith
-} from "rxjs/operators";
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { SettingsService, Settings } from '../services/settings.service';
+import { Observable, of, concat, pipe } from 'rxjs';
+import { tap, take, switchMap, map, distinctUntilChanged, delay, startWith } from 'rxjs/operators';
 
 const propertyUpdated = (property: string) =>
   pipe(
@@ -19,13 +11,13 @@ const propertyUpdated = (property: string) =>
     switchMap(_ => {
       return concat(of(true), of(false).pipe(delay(1000)));
     }),
-    startWith(false)
+    startWith(false),
   );
 
 @Component({
-  selector: "app-settings-dialog",
-  templateUrl: "./settings-dialog.component.html",
-  styleUrls: ["./settings-dialog.component.scss"]
+  selector: 'app-settings-dialog',
+  templateUrl: './settings-dialog.component.html',
+  styleUrls: ['./settings-dialog.component.scss'],
 })
 export class SettingsDialogComponent implements OnInit {
   form: FormGroup;
@@ -34,36 +26,23 @@ export class SettingsDialogComponent implements OnInit {
   pollingEnabledUpdated$: Observable<boolean>;
   showNotificationsUpdated$: Observable<boolean>;
 
-  constructor(
-    private fb: FormBuilder,
-    private settingsService: SettingsService
-  ) {}
+  constructor(private fb: FormBuilder, private settingsService: SettingsService) {}
 
   ngOnInit() {
     this.form = this.fb.group({
       pollingEnabled: true,
       interval: [5000, Validators.pattern(/^\d+$/)],
-      showNotifications: true
+      showNotifications: true,
     });
 
-    this.settingsService.settings$
-      .pipe(take(1))
-      .subscribe(settings => this.form.patchValue(settings));
+    this.settingsService.settings$.pipe(take(1)).subscribe(settings => this.form.patchValue(settings));
 
     this.showSettingsUpdated$ = this.form.valueChanges.pipe();
 
-    this.form.valueChanges.subscribe((form: Settings) =>
-      this.settingsService.updateSettings(form)
-    );
+    this.form.valueChanges.subscribe((form: Settings) => this.settingsService.updateSettings(form));
 
-    this.intervalUpdated$ = this.form.valueChanges.pipe(
-      propertyUpdated("interval")
-    );
-    this.showNotificationsUpdated$ = this.form.valueChanges.pipe(
-      propertyUpdated("showNotifications")
-    );
-    this.pollingEnabledUpdated$ = this.form.valueChanges.pipe(
-      propertyUpdated("pollingEnabled")
-    );
+    this.intervalUpdated$ = this.form.valueChanges.pipe(propertyUpdated('interval'));
+    this.showNotificationsUpdated$ = this.form.valueChanges.pipe(propertyUpdated('showNotifications'));
+    this.pollingEnabledUpdated$ = this.form.valueChanges.pipe(propertyUpdated('pollingEnabled'));
   }
 }

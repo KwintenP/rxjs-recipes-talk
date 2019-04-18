@@ -8,7 +8,7 @@
   </button>
 </div>
 <main>
-  <mat-card *ngFor="let joke of (jokes$ | async)">
+  <mat-card *ngFor="let joke of jokes$ | async">
     <div class="joke-content flex">
       <span class="vote">1</span>
       <span class="stretch" [innerHTML]="joke.joke"></span>

@@ -8,9 +8,8 @@ describe('JokeListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ JokeListComponent ]
-    })
-    .compileComponents();
+      declarations: [JokeListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

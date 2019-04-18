@@ -1,6 +1,6 @@
-import { Component, OnInit } from "@angular/core";
-import { JokesService, Joke } from "../services/jokes.service";
-import { Observable, Subject, merge, NEVER, of } from "rxjs";
+import { Component, OnInit } from '@angular/core';
+import { JokesService, Joke } from '../services/jokes.service';
+import { Observable, Subject, merge, NEVER, of } from 'rxjs';
 import {
   skip,
   mapTo,
@@ -11,18 +11,14 @@ import {
   first,
   switchMap,
   shareReplay,
-  scan
-} from "rxjs/operators";
-import {
-  SettingsService,
-  select,
-  Settings
-} from "../services/settings.service";
+  scan,
+} from 'rxjs/operators';
+import { SettingsService, select, Settings } from '../services/settings.service';
 
 @Component({
-  selector: "app-joke-list",
-  templateUrl: "./joke-list.component.html",
-  styleUrls: ["./joke-list.component.scss"]
+  selector: 'app-joke-list',
+  templateUrl: './joke-list.component.html',
+  styleUrls: ['./joke-list.component.scss'],
 })
 export class JokeListComponent implements OnInit {
   sourceJokes$: Observable<Array<Joke>>;
@@ -30,23 +26,20 @@ export class JokeListComponent implements OnInit {
   update$ = new Subject();
   showNotification$: Observable<boolean>;
 
-  constructor(
-    private jokesService: JokesService,
-    private settingsService: SettingsService
-  ) {}
+  constructor(private jokesService: JokesService, private settingsService: SettingsService) {}
 
   ngOnInit() {
     this.sourceJokes$ = this.jokesService.getJokes();
 
     const show$ = this.sourceJokes$.pipe(
       skip(1),
-      mapTo(true)
+      mapTo(true),
     );
 
     const hide$ = this.update$.pipe(mapTo(false));
 
     const showNotificationSettings$ = this.settingsService.settings$.pipe(
-      select(({ showNotifications }) => showNotifications)
+      select(({ showNotifications }) => showNotifications),
     );
 
     this.showNotification$ = showNotificationSettings$.pipe(
@@ -56,14 +49,14 @@ export class JokeListComponent implements OnInit {
         }
 
         return of(false);
-      })
+      }),
     );
 
     const initialJokes$ = this.sourceJokes$.pipe(first());
 
     const mostRecentJokes$ = this.update$.pipe(
       withLatestFrom(this.sourceJokes$),
-      map(([, jokes]) => jokes)
+      map(([, jokes]) => jokes),
     );
 
     this.jokes$ = showNotificationSettings$.pipe(
@@ -73,7 +66,7 @@ export class JokeListComponent implements OnInit {
         } else {
           return this.sourceJokes$;
         }
-      })
+      }),
     );
   }
 }

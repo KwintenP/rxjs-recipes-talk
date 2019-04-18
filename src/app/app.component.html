@@ -5,7 +5,7 @@
       <mat-icon aria-label="Login">settings</mat-icon>
     </button>
   </mat-toolbar-row>
-  <mat-toolbar-row class="cta-row" *ngIf="(isRoot | async)">
+  <mat-toolbar-row class="cta-row" *ngIf="isRoot | async">
     <button class="back-button" mat-button routerLink="/">
       <mat-icon aria-label="Login">keyboard_arrow_left</mat-icon>
       Back to Dashboard

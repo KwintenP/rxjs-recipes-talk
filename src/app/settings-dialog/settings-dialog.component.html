@@ -2,18 +2,10 @@
 <div mat-dialog-content>
   <form [formGroup]="form" fxLayout="column">
     <mat-form-field fxFlex>
-      <input
-        matInput
-        placeholder="Polling Interval"
-        formControlName="interval"
-      />
+      <input matInput placeholder="Polling Interval" formControlName="interval" />
     </mat-form-field>
-    <mat-checkbox fxFlex formControlName="pollingEnabled"
-      >Enable Polling</mat-checkbox
-    >
-    <mat-checkbox fxFlex formControlName="showNotifications"
-      >Show Notifications</mat-checkbox
-    >
+    <mat-checkbox fxFlex formControlName="pollingEnabled">Enable Polling</mat-checkbox>
+    <mat-checkbox fxFlex formControlName="showNotifications">Show Notifications</mat-checkbox>
   </form>
 </div>
 <div mat-dialog-actions align="end">
