@@ -5,24 +5,12 @@
       <mat-form-field fxFlex>
         <input matInput placeholder="Polling Interval" formControlName="interval" />
       </mat-form-field>
-      <div class="update-info" [class.visible]="intervalUpdated$ | async">
-        <mat-icon>check</mat-icon>
-        SAVED
-      </div>
     </div>
     <div class="field">
       <mat-checkbox class="field" fxFlex formControlName="pollingEnabled">Enable Polling</mat-checkbox>
-      <div class="update-info" [class.visible]="pollingEnabledUpdated$ | async">
-        <mat-icon>check</mat-icon>
-        SAVED
-      </div>
     </div>
     <div class="field">
       <mat-checkbox class="field" fxFlex formControlName="showNotifications">Show Notifications</mat-checkbox>
-      <div class="update-info" [class.visible]="showNotificationsUpdated$ | async">
-        <mat-icon>check</mat-icon>
-        SAVED
-      </div>
     </div>
   </form>
 </div>
