@@ -33,10 +33,7 @@ export class JokeListComponent implements OnInit {
 
     const initialJokes$ = this.sourceJokes$.pipe(first());
 
-    const mostRecentJokes$ = this.update$.pipe(
-      withLatestFrom(this.sourceJokes$),
-      map(([, jokes]) => jokes),
-    );
+    const mostRecentJokes$ = this.sourceJokes$;
 
     this.jokes$ = merge(initialJokes$, mostRecentJokes$);
   }
