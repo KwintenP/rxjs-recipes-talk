@@ -29,8 +29,6 @@ export class JokesService {
       return this.jokes$;
     }
 
-    timer(0, 10000).pipe(exhaustMap(_ => this.jokes$));
-
     this.jokes$ = this.settingsService.settings$.pipe(
       map(({ interval, pollingEnabled }) => ({ interval, pollingEnabled })),
       distinctUntilChanged((x, y) => x.interval === y.interval && y.pollingEnabled === x.pollingEnabled),
