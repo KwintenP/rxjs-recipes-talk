@@ -38,16 +38,6 @@ export class JokesService {
         if (pollingEnabled) {
           return timer(0, interval).pipe(
             switchMap(_ => this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(map(res => res.value))),
-            retryWhen(errors =>
-              errors.pipe(
-                switchMap<any, any>(_ => {
-                  if (navigator.onLine) {
-                    return timer(1000).pipe(take(5));
-                  }
-                  return fromEvent(window, 'online');
-                }),
-              ),
-            ),
           );
         }
         return NEVER;
