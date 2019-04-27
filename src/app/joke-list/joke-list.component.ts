@@ -31,15 +31,6 @@ export class JokeListComponent implements OnInit {
   ngOnInit() {
     this.sourceJokes$ = this.jokesService.getJokes();
 
-    const show$ = this.sourceJokes$.pipe(
-      skip(1),
-      mapTo(true),
-    );
-
-    const hide$ = this.update$.pipe(mapTo(false));
-
-    this.showNotification$ = merge(show$, hide$).pipe(startWith(false));
-
     const initialJokes$ = this.sourceJokes$.pipe(first());
 
     const mostRecentJokes$ = this.update$.pipe(
