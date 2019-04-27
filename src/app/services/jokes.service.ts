@@ -37,7 +37,7 @@ export class JokesService {
       switchMap(({ pollingEnabled, interval }) => {
         if (pollingEnabled) {
           return timer(0, interval).pipe(
-            switchMap(_ => this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(map(res => res.value))),
+            exhaustMap(_ => this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(map(res => res.value))),
           );
         }
         return NEVER;
