@@ -31,9 +31,7 @@ export class SettingsService {
 
   constructor() {}
 
-  ngOnInit() {
-    this._settings$.pipe(scan((state, updates) => ({ ...state, updates })));
-  }
+  ngOnInit() {}
 
   updateSettings(update: Partial<Settings>) {
     this._settings$.next(update);
