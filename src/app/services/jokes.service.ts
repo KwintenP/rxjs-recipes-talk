@@ -29,15 +29,13 @@ export class JokesService {
       return this.jokes$;
     }
 
-    timer(0, 10000).pipe(exhaustMap(_ => this.jokes$));
-
     this.jokes$ = this.settingsService.settings$.pipe(
       map(({ interval, pollingEnabled }) => ({ interval, pollingEnabled })),
       distinctUntilChanged((x, y) => x.interval === y.interval && y.pollingEnabled === x.pollingEnabled),
       switchMap(({ pollingEnabled, interval }) => {
         if (pollingEnabled) {
           return timer(0, interval).pipe(
-            switchMap(_ => this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(map(res => res.value))),
+            exhaustMap(_ => this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(map(res => res.value))),
             retryWhen(errors =>
               errors.pipe(
                 switchMap<any, any>(_ => {
