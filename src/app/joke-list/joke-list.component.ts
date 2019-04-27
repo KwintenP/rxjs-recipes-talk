@@ -38,19 +38,7 @@ export class JokeListComponent implements OnInit {
 
     const hide$ = this.update$.pipe(mapTo(false));
 
-    const showNotificationSettings$ = this.settingsService.settings$.pipe(
-      select(({ showNotifications }) => showNotifications),
-    );
-
-    this.showNotification$ = showNotificationSettings$.pipe(
-      switchMap(showNotifications => {
-        if (showNotifications) {
-          return merge(show$, hide$).pipe(startWith(false));
-        }
-
-        return of(false);
-      }),
-    );
+    this.showNotification$ = merge(show$, hide$).pipe(startWith(false));
 
     const initialJokes$ = this.sourceJokes$.pipe(first());
 
@@ -59,14 +47,6 @@ export class JokeListComponent implements OnInit {
       map(([, jokes]) => jokes),
     );
 
-    this.jokes$ = showNotificationSettings$.pipe(
-      switchMap(showNotifications => {
-        if (showNotifications) {
-          return merge(initialJokes$, mostRecentJokes$);
-        } else {
-          return this.sourceJokes$;
-        }
-      }),
-    );
+    this.jokes$ = merge(initialJokes$, mostRecentJokes$);
   }
 }
