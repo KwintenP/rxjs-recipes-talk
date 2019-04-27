@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { distinctUntilChanged, map, mapTo, retryWhen, shareReplay, switchMap, take } from 'rxjs/operators';
-import { fromEvent, NEVER, Observable, of, timer } from 'rxjs';
+import { distinctUntilChanged, map, mapTo, retryWhen, shareReplay, switchMap, take, exhaustMap } from 'rxjs/operators';
+import { fromEvent, NEVER, Observable, of, race, timer } from 'rxjs';
 import { SettingsService } from './settings.service';
 
 export interface JokesResponse {
@@ -29,6 +29,8 @@ export class JokesService {
       return this.jokes$;
     }
 
+    timer(0, 10000).pipe(exhaustMap(_ => this.jokes$));
+
     this.jokes$ = this.settingsService.settings$.pipe(
       map(({ interval, pollingEnabled }) => ({ interval, pollingEnabled })),
       distinctUntilChanged((x, y) => x.interval === y.interval && y.pollingEnabled === x.pollingEnabled),
@@ -42,7 +44,7 @@ export class JokesService {
                   if (navigator.onLine) {
                     return timer(1000).pipe(take(5));
                   }
-                  return fromEvent(window, `online`);
+                  return fromEvent(window, 'online');
                 }),
               ),
             ),
