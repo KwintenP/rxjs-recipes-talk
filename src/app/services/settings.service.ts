@@ -29,9 +29,7 @@ export class SettingsService {
 
   settings$: Observable<Partial<Settings>> = this._settings$.asObservable();
 
-  constructor() {}
-
-  ngOnInit() {
+  constructor() {
     this._settings$.pipe(scan((state, updates) => ({ ...state, updates })));
   }
 
