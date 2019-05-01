@@ -31,8 +31,6 @@ export class SettingsService {
 
   constructor() {}
 
-  ngOnInit() {}
-
   updateSettings(update: Partial<Settings>) {
     this._settings$.next(update);
   }
