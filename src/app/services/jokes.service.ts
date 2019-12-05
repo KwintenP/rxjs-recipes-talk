@@ -29,8 +29,6 @@ export class JokesService {
       return this.jokes$;
     }
 
-    timer(0, 10000).pipe(exhaustMap(_ => this.jokes$));
-
     this.jokes$ = timer(0, 5000).pipe(
       exhaustMap(_ => this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(map(res => res.value))),
       shareReplay(1),
