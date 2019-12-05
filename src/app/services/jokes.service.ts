@@ -1,6 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { distinctUntilChanged, map, mapTo, retryWhen, shareReplay, switchMap, take, exhaustMap } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  map,
+  mapTo,
+  retryWhen,
+  shareReplay,
+  switchMap,
+  take,
+  exhaustMap,
+  tap,
+} from 'rxjs/operators';
 import { fromEvent, NEVER, Observable, of, race, timer } from 'rxjs';
 import { SettingsService } from './settings.service';
 
@@ -38,9 +48,10 @@ export class JokesService {
             exhaustMap(_ => this.http.get<JokesResponse>(this.API_ENDPOINT).pipe(map(res => res.value))),
             retryWhen(errors =>
               errors.pipe(
+                tap(console.log),
                 switchMap<any, any>(_ => {
                   if (navigator.onLine) {
-                    return timer(1000).pipe(take(5));
+                    return timer(1000).pipe(take(1));
                   }
                   return fromEvent(window, 'online');
                 }),
