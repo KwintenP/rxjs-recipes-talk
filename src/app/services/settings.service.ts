@@ -27,10 +27,11 @@ export class SettingsService {
 
   private _settings$ = new BehaviorSubject<Partial<Settings>>(this.initialState);
 
-  settings$: Observable<Partial<Settings>> = this._settings$.asObservable();
+  settings$: Observable<Partial<Settings>>;
 
   constructor() {
-    this._settings$.pipe(scan((state, updates) => ({ ...state, updates })));
+    this.settings$ = this._settings$.pipe(scan((state, updates) => ({ ...state, ...updates })));
+    this.settings$.subscribe(console.log);
   }
 
   updateSettings(update: Partial<Settings>) {
