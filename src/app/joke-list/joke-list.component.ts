@@ -38,7 +38,7 @@ export class JokeListComponent implements OnInit {
 
     const hide$ = this.update$.pipe(mapTo(false));
 
-    this.showNotification$ = merge(show$, hide$).pipe(startWith(false));
+    this.showNotification$ = merge(show$, hide$);
 
     const initialJokes$ = this.sourceJokes$.pipe(first());
 
