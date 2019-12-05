@@ -30,7 +30,7 @@ export class SettingsService {
   settings$: Observable<Partial<Settings>>;
 
   constructor() {
-    this.settings$ = this._settings$.pipe(scan((state, updates) => ({ ...state, updates })));
+    this.settings$ = this._settings$.pipe(scan((state, updates) => ({ ...state, ...updates })));
   }
 
   updateSettings(update: Partial<Settings>) {
